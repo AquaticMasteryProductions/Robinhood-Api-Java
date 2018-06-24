@@ -9,6 +9,8 @@ import com.ampro.robinhood.endpoint.authorize.methods.AuthorizeWithoutMultifacto
 import com.ampro.robinhood.endpoint.authorize.methods.LogoutFromRobinhood;
 import com.ampro.robinhood.endpoint.fundamentals.data.TickerFundamentalElement;
 import com.ampro.robinhood.endpoint.fundamentals.methods.GetTickerFundamental;
+import com.ampro.robinhood.endpoint.instruments.data.InstrumentsArrayWrapper;
+import com.ampro.robinhood.endpoint.instruments.methods.GetInstruments;
 import com.ampro.robinhood.endpoint.orders.data.SecurityOrderElement;
 import com.ampro.robinhood.endpoint.orders.data.SecurityOrderListElement;
 import com.ampro.robinhood.endpoint.orders.enums.OrderTransactionType;
@@ -484,22 +486,38 @@ public class RobinhoodApi {
 		//Return the list from the paginated object from the call
 		return orders.getSecurtiyOrders();
 	}
+	
+	/**
+	 * 
+	 * @return list of Instruments at the given cursor
+	 * @throws RobinhoodApiException
+	 */
+	public InstrumentsArrayWrapper getInstruments() 
+	throws RobinhoodApiException {
+		//get the first page
+		return this.getInstruments("https://api.robinhood.com/instruments/");
+	}
+	
+	/**
+	 * 
+	 * @param cursorUrl, the url with the corresponding cursor parameter
+	 * @return list of Instruments at the given cursor
+	 * @throws RobinhoodApiException
+	 */
+	public InstrumentsArrayWrapper getInstruments(String cursor) 
+	throws RobinhoodApiException {
+		//Setup the web method call
+		ApiMethod method = new GetInstruments(cursor);
+		//Return the list from the paginated object from the call
+		return requestManager.makeApiRequest(method);
+	}
 
 	/**
-	 * A method which attempts to throw a {@link RobinhoodNotLoggedInException} to see if there is currently a user logged
-	 * in or not.
+	 * Checks if there is a token currently stored which would correspond to a logged in user.
 	 * @return If there is a user logged into the Robinhood Instance or not.
 	 */
 	public boolean isLoggedIn() {
-
-		try {
-
-			String token = getAccountAuthToken();
-
-		} catch (RobinhoodNotLoggedInException e) {
-			return false;
-		}
-		return true;
+		return configManager.hasToken();
 	}
 
 }

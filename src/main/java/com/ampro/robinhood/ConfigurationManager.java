@@ -50,6 +50,14 @@ public class ConfigurationManager {
 
 		return ConfigurationManager.instance;
 	}
+	
+	/**
+	 * Method used to return if there is a token currently stored.
+	 * @return if there is an auth token.
+	 */
+	public boolean hasToken() {
+		return authToken != null;
+	}
 
 	/**
 	 * Method which gets the saved authorization token if the user is logged in.

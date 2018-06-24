@@ -37,3 +37,4 @@ build/
 
 #Artifacts location
 classes/artifacts/
+.settings/
