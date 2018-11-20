@@ -17,18 +17,31 @@ import com.ampro.robinhood.endpoint.RobinhoodEnum;
  */
 public class AuthorizationData implements ApiElement {
 
+    /** The authorization token used to authorize private ApiMethods */
+    private String access_token;
+  
+    /** The type of multifactor authorization */
+    private String mfa_type;
+  
+    /** Whether multifactor is required to login */
+    private boolean mfa_required = false;
+  
+    /** The multifactor authorization code to enable login */
+    private String mfaCode;
+  
     /**
      * A wrapper for deserializing token strings from Robinhood
      * @author Conrad Weisse
      */
     public static class Token implements ApiElement {
-        /** The actual authorization token string */
-        private String token;
+        /** The actual authorization token string.
+         * This name must have an underscore for json unmarshalling. */
+        private String access_token;
         /** @return The actual authorization token string */
-        public String getToken() { return this.token; }
+        public String getToken() { return this.access_token; }
         /** @return The actual authorization token string */
         @Override
-        public String toString() { return this.token; }
+        public String toString() { return this.access_token; }
     }
 
     /**
@@ -62,21 +75,10 @@ public class AuthorizationData implements ApiElement {
         public String toString() { return value; }
     }
 
-    /** The authorization token used to authorize private ApiMethods */
-    private String token;
-
-    /** The type of multifactor authorization */
-    private String mfa_type;
-
-    /** Whether multifactor is required to login */
-    private boolean mfa_required = false;
-
-    /** The multifactor authorization code to enable login */
-    private String mfaCode;
 
     /** @return The authorization token used to authorize private ApiMethods */
     public String getToken() {
-        return token;
+        return access_token;
     }
 
     /**
@@ -84,7 +86,7 @@ public class AuthorizationData implements ApiElement {
      * @param newToken The new token
      */
     public void setToken(String newToken) {
-        this.token = newToken;
+        this.access_token = newToken;
     }
 
     /**
@@ -92,7 +94,7 @@ public class AuthorizationData implements ApiElement {
      * @param newToken The new token
      */
     public void setToken(Token newToken) {
-        this.token = newToken.getToken();
+        this.access_token = newToken.getToken();
     }
 
     /** @param mfaCode The new multifactor authorization code */
@@ -119,6 +121,6 @@ public class AuthorizationData implements ApiElement {
     @Override
     public String toString() {
         return String.format("[TOKEN=%s][MFA_CODE=%s][MFA_TYPE=%s][MFA_REQUIRED=%s]",
-                             token, mfaCode, mfa_type, mfa_required);
+            access_token, mfaCode, mfa_type, mfa_required);
     }
 }
